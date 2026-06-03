@@ -1,3 +1,4 @@
+# Slide deck 16
 import yfinance as yf
 import pandas as pd
 import streamlit as st   # add at top with other imports, the rest at the bottom
@@ -29,4 +30,23 @@ st.line_chart(stock_data)
 
 st.subheader("Stock Returns")
 st.line_chart(returns_data)
+#return, risk_free_rate
+# slide 12
+def calculate_sharpe_ratio(returns, risk_free_rate=0.02):
+    portfolio_return = returns.mean().mean()
+    portfolio_volatility = returns.std().mean()
+    return (portfolio_return - risk_free_rate) / portfolio_volatility
+
+def calculate_sortino_ratio(returns, risk_free_rate=0.02):
+    portfolio_return = returns.mean().mean()
+    downside_returns = returns[returns < 0]
+    downside_deviation = downside_returns.std().mean()
+    return (portfolio_return - risk_free_rate) / downside_deviation
+
+sharpe_ratio = calculate_sharpe_ratio(returns_data)
+sortino_ratio = calculate_sortino_ratio(returns_data)
+
+st.subheader("Performance Metrics")
+st.write(f"Sharpe Ratio: {sharpe_ratio:.2f}")
+st.write(f"Sortino Ratio: {sortino_ratio:.2f}")
 

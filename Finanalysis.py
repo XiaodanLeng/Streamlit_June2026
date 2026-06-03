@@ -2,6 +2,7 @@
 import yfinance as yf
 import pandas as pd
 import streamlit as st   # add at top with other imports, the rest at the bottom
+import numpy as np
 
 # wrap
 def fetch_data(tickers, start_date, end_date):
@@ -13,6 +14,22 @@ def fetch_data(tickers, start_date, end_date):
     data = pd.concat(data_frames, axis=1, keys=tickers)
     data.columns = tickers
     return data#Slide 10
+
+# slide 12
+def calculate_sharpe_ratio(returns, risk_free_rate=0.02):
+    portfolio_return = returns.mean().mean()
+    portfolio_volatility = returns.std().mean()
+    return (portfolio_return - risk_free_rate) / portfolio_volatility
+
+def calculate_sortino_ratio(returns, risk_free_rate=0.02):
+    portfolio_return = returns.mean().mean()
+    downside_returns = returns[returns < 0]
+    downside_deviation = downside_returns.std().mean()
+    return (portfolio_return - risk_free_rate) / downside_deviation
+# slide 15 more advanced analysis with numpy
+def portfolio_optimization(returns):
+    return np.ones(len(returns.columns)) / len(returns.columns
+
 
 # User inputs
 tickers = st.text_input("Enter stock tickers (comma separated)", "AAPL, MSFT, GOOG").split(",")
@@ -31,22 +48,24 @@ st.line_chart(stock_data)
 st.subheader("Stock Returns")
 st.line_chart(returns_data)
 #return, risk_free_rate
-# slide 12
-def calculate_sharpe_ratio(returns, risk_free_rate=0.02):
-    portfolio_return = returns.mean().mean()
-    portfolio_volatility = returns.std().mean()
-    return (portfolio_return - risk_free_rate) / portfolio_volatility
 
-def calculate_sortino_ratio(returns, risk_free_rate=0.02):
-    portfolio_return = returns.mean().mean()
-    downside_returns = returns[returns < 0]
-    downside_deviation = downside_returns.std().mean()
-    return (portfolio_return - risk_free_rate) / downside_deviation
-
+                                               
 sharpe_ratio = calculate_sharpe_ratio(returns_data)
 sortino_ratio = calculate_sortino_ratio(returns_data)
 
+# slide 13
 st.subheader("Performance Metrics")
 st.write(f"Sharpe Ratio: {sharpe_ratio:.2f}")
 st.write(f"Sortino Ratio: {sortino_ratio:.2f}")
 
+# slide 14
+optimal_weights = portfolio_optimization(returns_data)
+
+st.subheader("Portfolio Optimization")
+st.write("Optimal Portfolio Weights:")
+for ticker, weight in zip(tickers, optimal_weights):
+    st.write(f"{ticker}: {weight:.2%}")
+
+# slide 17 for download
+csv_data = stock_data.to_csv()
+st.download_button("Download Stock Data CSV", csv_data, "stock_data.csv")

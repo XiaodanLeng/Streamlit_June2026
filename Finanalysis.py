@@ -28,7 +28,7 @@ def calculate_sortino_ratio(returns, risk_free_rate=0.02):
     return (portfolio_return - risk_free_rate) / downside_deviation
 # slide 15 more advanced analysis with numpy
 def portfolio_optimization(returns):
-    return np.ones(len(returns.columns)) / len(returns.columns
+    return np.ones(len(returns.columns)) / len(returns.columns)
 
 
 # User inputs

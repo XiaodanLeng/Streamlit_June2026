@@ -1,4 +1,5 @@
 # Slide deck 24 slide 6import streamlit as st
+import streamlit as st
 import random
 import time
 
